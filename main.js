@@ -101,56 +101,108 @@ const quiniela = {
   99: "El hermano",
 };
 
-let usuario = prompt("Ingrese su nombre:");
+// let opcion = prompt(
+//   `${usuario} - ELIGE\n1 - Adivinar\n2 - Numero de la Suerte\n3 - Quiniela\n4 - Cambiar Usuario\n5 - Salir`
+// );
+const formulario = document.getElementById("formulario");
 
-let opcion = prompt(
-  `${usuario} - ELIGE\n1 - Adivinar\n2 - Numero de la Suerte\n3 - Quiniela\n4 - Cambiar Usuario\n5 - Salir`
-);
+const usuarioIngresado = document.getElementById("usuario");
 
-while (opcion !== "5") {
-  switch (opcion) {
-    case "1":
-      function tirarDado() {
-        let numDado = Math.floor(Math.random() * 6) + 1;
-        let numElegido = parseInt(prompt("Adivina el número del 1 al 6:"));
+const usuarioGuardar = document.querySelector(".btn-guardar");
 
-        if (numElegido < 1 || numElegido > 6) {
-          alert("Numero no valido");
-        } else {
-          if (parseInt(numElegido) === numDado) {
-            alert("Acertaste! El numero era " + numDado);
-          } else {
-            alert("Perdiste! El numero era " + numDado);
-          }
-        }
-      }
-      tirarDado();
-      break;
-    case "2":
-      confirm(
-        "Tu numero de la suerte es: " + (Math.floor(Math.random() * 100) + 1)
-      );
-      break;
+const jugar = document.getElementById("jugar");
 
-    case "3":
-      let numSignificado = parseInt(prompt("Ingrese un numero del 0 al 99"));
-      if (quiniela[numSignificado] !== undefined) {
-        alert("Significado es: " + quiniela[numSignificado]);
-      } else {
-        alert("Numero no valido");
-      }
-      break;
-    case "4":
-      usuario = prompt("Ingrese su nombre:");
-      break;
+const sectionUno = document.querySelector(".seccion-uno");
 
-    default:
-      console.log("Opcion no valida");
-      break;
+const sectionDos = document.querySelector(".seccion-dos");
+
+let jugadores = [];
+
+usuarioGuardar.addEventListener("click", (e) => {
+  e.preventDefault();
+  const nombre = usuarioIngresado.value.trim();
+  if (nombre === "" || !isNaN(nombre))
+    return alert("Ingrese un nombre (no numeros)");
+
+  if (nombre) {
+    jugadores.push({ nombre });
   }
-  opcion = prompt(
-    `${usuario} - ELIGE\n1 - Adivinar\n2 - Numero de la Suerte\n3 - Quiniela\n4 - Cambiar Usuario\n5 - Salir`
-  );
+  jugar.removeAttribute("hidden");
+  sectionUno.setAttribute("hidden", "true");
+  sectionDos.removeAttribute("hidden");
+
+  const saludo = document.getElementById("saludo");
+  saludo.textContent = `Bienvenido ${jugadores[jugadores.length - 1].nombre}`;
+});
+
+const botones = [
+  { clase: "btn-adivinar", texto: "Adivinar", logica: tirarDado },
+  {
+    clase: "btn-numsuerte",
+    texto: "Número de la suerte",
+    logica: numeroSuerte,
+  },
+  { clase: "btn-quiniela", texto: "Quiniela", logica: numQuiniela },
+  {
+    clase: "btn-cambiarusuario",
+    texto: "Cambiar Usuario",
+    logica: cambiarUsuario,
+  },
+  { clase: "btn-salir", texto: "Salir", logica: salir },
+];
+
+function crearBoton(nombreClase, texto, logica) {
+  const boton = document.createElement("button");
+  boton.className = `btn ${nombreClase}`;
+  boton.textContent = texto;
+  boton.addEventListener("click", logica);
+
+  return boton;
+}
+jugar.addEventListener("click", () => {
+  jugar.setAttribute("hidden", "true");
+
+  botones.forEach((boton) => {
+    const nuevoBoton = crearBoton(boton.clase, boton.texto, boton.logica);
+    sectionDos.appendChild(nuevoBoton);
+  });
+});
+
+function tirarDado() {
+  let numDado = Math.floor(Math.random() * 6) + 1;
+  let numElegido = parseInt(prompt("Adivina el número del 1 al 6:"));
+
+  if (numElegido < 1 || numElegido > 6) {
+    alert("Numero no valido");
+  } else {
+    if (parseInt(numElegido) === numDado) {
+      alert("Acertaste! El numero era " + numDado);
+    } else {
+      alert("Perdiste! El numero era " + numDado);
+    }
+  }
 }
 
-console.log("Gracias por jugar");
+function numeroSuerte() {
+  alert("Tu numero de la suerte es: " + (Math.floor(Math.random() * 100) + 1));
+}
+
+function numQuiniela() {
+  let numSignificado = parseInt(prompt("Ingrese un numero del 0 al 99"));
+  if (quiniela[numSignificado] !== undefined) {
+    alert("Significado es: " + quiniela[numSignificado]);
+  } else {
+    alert("Numero no valido");
+  }
+}
+
+function cambiarUsuario() {
+  usuario = prompt("Ingrese su nombre:");
+}
+
+function salir() {
+  sectionUno.removeAttribute("hidden");
+  sectionDos.setAttribute("hidden", "true");
+}
+
+// console.log("Gracias por jugar");

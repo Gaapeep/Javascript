@@ -4,15 +4,36 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ENTREGABLE 1</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h1>Entretenimiento con números</h1>
-    <p>
-      Pequeño sistema de entretenimiento con números. El cual el usuario podrá
-      adivinar que numero del dado saldrá, obtener un numero de la suerte o
-      saber el significado de un numero del 0 al 99 en la Quiniela
-    </p>
+    <header>
+      <h1>Entretenimiento con números</h1>
+    </header>
+    <article>
+      <p>
+        Pequeño sistema de entretenimiento con números. El cual el usuario podrá
+        adivinar que numero del dado saldrá, obtener un numero de la suerte o
+        saber el significado de un numero del 0 al 99 en la Quiniela
+      </p>
+    </article>
+    <main>
+      <section class="seccion seccion-uno">
+        <form id="formulario">
+          <label for="usuario">Ingresa tu nombre:</label>
+          <input type="text" name="usuario" id="usuario" />
+          <input class="btn btn-guardar" type="submit" value="Guardar" />
+        </form>
+      </section>
 
-    <script src="main.js"></script>
+      <section class="seccion seccion-dos">
+        <p id="saludo"></p>
+        <button id="jugar" hidden>Jugar</button>
+      </section>
+    </main>
   </body>
+  <footer>
+    <p>Creado por Gabriel Fabian Rodriguez</p>
+  </footer>
+  <script src="main.js"></script>
 </html>
