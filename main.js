@@ -116,7 +116,45 @@ const sectionUno = document.querySelector(".seccion-uno");
 
 const sectionDos = document.querySelector(".seccion-dos");
 
+const sectionTres = document.querySelector(".seccion-tres");
+
+const datos = document.getElementById("datos");
+
+const saludo = document.getElementById("saludo");
+
 let jugadores = [];
+let jugadorActual;
+
+let jugadoresGuardados = localStorage.getItem("jugador");
+if (jugadoresGuardados) {
+  jugadores = JSON.parse(jugadoresGuardados);
+}
+
+function mostrarDatos() {
+  datos.innerHTML = "";
+  jugadores.forEach((jugador) => {
+    let fila = document.createElement("tr");
+
+    let tdNombre = document.createElement("td");
+    tdNombre.textContent = jugador.nombre;
+
+    let tdTiros = document.createElement("td");
+    tdTiros.textContent = jugador.tiros;
+
+    let tdAciertos = document.createElement("td");
+    tdAciertos.textContent = jugador.aciertos;
+
+    let tdErrados = document.createElement("td");
+    tdErrados.textContent = jugador.errados;
+
+    fila.appendChild(tdNombre);
+    fila.appendChild(tdTiros);
+    fila.appendChild(tdAciertos);
+    fila.appendChild(tdErrados);
+
+    datos.appendChild(fila);
+  });
+}
 
 usuarioGuardar.addEventListener("click", (e) => {
   e.preventDefault();
@@ -124,15 +162,28 @@ usuarioGuardar.addEventListener("click", (e) => {
   if (nombre === "" || !isNaN(nombre))
     return alert("Ingrese un nombre (no numeros)");
 
-  if (nombre) {
-    jugadores.push({ nombre });
+  let yaExiste = jugadores.find((jugador) => jugador.nombre === nombre);
+  if (yaExiste) {
+    jugadorActual = yaExiste;
+    saludo.textContent = `Bienvenido Nuevamente ${jugadorActual.nombre}`;
+  } else {
+    jugadorActual = {
+      nombre: nombre,
+      tiros: 0,
+      aciertos: 0,
+      errados: 0,
+    };
+    jugadores.push(jugadorActual);
+    saludo.textContent = `Bienvenido ${jugadorActual.nombre}`;
+
+    mostrarDatos();
   }
+
+  localStorage.setItem("jugador", JSON.stringify(jugadores));
+
   jugar.removeAttribute("hidden");
   sectionUno.setAttribute("hidden", "true");
   sectionDos.removeAttribute("hidden");
-
-  const saludo = document.getElementById("saludo");
-  saludo.textContent = `Bienvenido ${jugadores[jugadores.length - 1].nombre}`;
 });
 
 const botones = [
@@ -143,12 +194,17 @@ const botones = [
     logica: numeroSuerte,
   },
   { clase: "btn-quiniela", texto: "Quiniela", logica: numQuiniela },
+
   {
     clase: "btn-cambiarusuario",
     texto: "Cambiar Usuario",
     logica: cambiarUsuario,
   },
-  { clase: "btn-salir", texto: "Salir", logica: salir },
+  {
+    clase: "btn-borrardatos",
+    texto: "Borrar Datos",
+    logica: borrarDatos,
+  },
 ];
 
 function crearBoton(nombreClase, texto, logica) {
@@ -174,13 +230,20 @@ function tirarDado() {
 
   if (numElegido < 1 || numElegido > 6) {
     alert("Numero no valido");
-  } else {
-    if (parseInt(numElegido) === numDado) {
-      alert("Acertaste! El numero era " + numDado);
-    } else {
-      alert("Perdiste! El numero era " + numDado);
-    }
   }
+  jugadorActual.tiros++;
+
+  if (parseInt(numElegido) === numDado) {
+    jugadorActual.aciertos++;
+    alert("Acertaste! El numero era " + numDado);
+  } else {
+    jugadorActual.errados++;
+    alert("Perdiste! El numero era " + numDado);
+  }
+
+  localStorage.setItem("jugador", JSON.stringify(jugadores));
+
+  mostrarDatos();
 }
 
 function numeroSuerte() {
@@ -197,12 +260,19 @@ function numQuiniela() {
 }
 
 function cambiarUsuario() {
-  usuario = prompt("Ingrese su nombre:");
-}
-
-function salir() {
   sectionUno.removeAttribute("hidden");
   sectionDos.setAttribute("hidden", "true");
+  sectionDos.querySelectorAll(".btn").forEach((boton) => {
+    boton.remove();
+  });
+  usuarioIngresado.value = "";
 }
+
+function borrarDatos() {
+  localStorage.removeItem("jugador");
+  location.reload(); // Recargar la página
+}
+
+mostrarDatos();
 
 // console.log("Gracias por jugar");

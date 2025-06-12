@@ -57,3 +57,18 @@ section {
   margin: 10px 5px;
   padding: 5px 12px;
 }
+
+#tabla {
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+}
+#tabla thead th {
+  background-color: #333;
+  color: white;
+  padding: 5px;
+}
+
+#tabla td {
+  padding: 5px;
+}
