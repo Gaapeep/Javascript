@@ -101,9 +101,6 @@ const quiniela = {
   99: "El hermano",
 };
 
-// let opcion = prompt(
-//   `${usuario} - ELIGE\n1 - Adivinar\n2 - Numero de la Suerte\n3 - Quiniela\n4 - Cambiar Usuario\n5 - Salir`
-// );
 const formulario = document.getElementById("formulario");
 
 const usuarioIngresado = document.getElementById("usuario");
@@ -274,5 +271,3 @@ function borrarDatos() {
 }
 
 mostrarDatos();
-
-// console.log("Gracias por jugar");
